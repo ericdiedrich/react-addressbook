@@ -1,26 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const ListItem = ({ value, onClick }) => (
+    <li onClick={onClick}>{value}</li>
+);
 
+const List = ({ items, onItemClick }) => (
+  <ul>{items.map((item, i) => <ListItem key={i} value={item} onClick={onItemClick} />)}</ul>
+);
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputValue: '',
+      phonebook: []
+    };
+  }
+  onClick = () => {
+    const { inputValue, phonebook } = this.state;
+    if (inputValue) {
+      const nextState = [...phonebook, inputValue];
+      this.setState({ phonebook: nextState, inputValue: '' });
+    }
+  }
+  onChange = (e) => this.setState({ inputValue: e.target.value });
+  handleItemClick = (e) => {console.log(e.target.innerHTML)}
+  render() {
+    const { phonebook, inputValue } = this.state;
+    return (
+      <div className="container">
+        <div className="wrapper">
+          <div className="input">
+            <input type="text" value={inputValue} onChange={this.onChange} />
+            <button className="btn" onClick={this.onClick}>Add</button>
+          </div>
+          <div className="addressbook">
+            <List items={phonebook} onItemClick={this.handleItemClick} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 export default App;
+
